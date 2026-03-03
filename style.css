@@ -6,14 +6,14 @@
 }
 
 :root {
-  --color-bg: #0f172a;
-  --color-text: #e2e8f0;
-  --color-muted: #94a3b8;
-  --color-accent: #7aa2d4;
-  --color-accent-light: #1e293b;
-  --color-border: #1e293b;
-  --color-section-alt: #1a2332;
-  --color-card-bg: #162032;
+  --color-bg: #ede8df;
+  --color-text: #2c2c2c;
+  --color-muted: #6b6560;
+  --color-accent: #3d5a80;
+  --color-accent-light: #e3ddd4;
+  --color-border: #d5cfc5;
+  --color-section-alt: #e5e0d6;
+  --color-card-bg: #f5f1eb;
   --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --max-width: 800px;
   --nav-height: 60px;
@@ -40,7 +40,7 @@ a {
 }
 
 a:hover {
-  color: #93b8e8;
+  color: #2c4a6e;
 }
 
 ul {
@@ -60,7 +60,7 @@ ul {
   left: 0;
   right: 0;
   height: var(--nav-height);
-  background: rgba(15, 23, 42, 0.92);
+  background: rgba(237, 232, 223, 0.92);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--color-border);
@@ -69,7 +69,7 @@ ul {
 }
 
 .nav.scrolled {
-  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08);
 }
 
 .nav-inner {
@@ -198,9 +198,9 @@ ul {
 }
 
 .btn:hover {
-  background: #93b8e8;
-  border-color: #93b8e8;
-  color: #0f172a;
+  background: #2c4a6e;
+  border-color: #2c4a6e;
+  color: #fff;
 }
 
 .btn-outline {
@@ -284,7 +284,7 @@ ul {
 .entry-list li {
   margin-bottom: 6px;
   font-size: 0.95rem;
-  color: #cbd5e1;
+  color: var(--color-muted);
   line-height: 1.65;
 }
 
@@ -293,69 +293,85 @@ ul {
   font-size: 0.925rem;
 }
 
-/* === Featured Projects === */
-.project-featured {
-  display: flex;
-  gap: 28px;
+/* === Projects Grid === */
+.projects-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.project-card {
   border: 1px solid var(--color-border);
-  border-radius: 10px;
+  border-radius: 8px;
+  padding: 24px;
   background: var(--color-card-bg);
-  overflow: hidden;
-  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   transition: border-color 0.2s, box-shadow 0.2s;
-  text-decoration: none;
-  color: inherit;
-}
-
-.project-featured:hover {
-  border-color: var(--color-accent);
-  box-shadow: 0 4px 20px rgba(122, 162, 212, 0.15);
-  color: inherit;
-}
-
-.project-featured-img {
-  flex: 0 0 280px;
-  background: #0d1520;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.project-featured-img img {
+.project-card:hover {
+  border-color: var(--color-accent);
+  box-shadow: 0 2px 12px rgba(61, 90, 128, 0.1);
+}
+
+/* Wide card spans both columns */
+.project-card-wide {
+  grid-column: 1 / -1;
+  padding: 0;
+}
+
+.project-card-inner {
+  display: flex;
+  gap: 0;
+  align-items: stretch;
+}
+
+.project-card-thumb {
+  flex: 0 0 200px;
+  overflow: hidden;
+  border-radius: 8px 0 0 8px;
+  background: #e3ddd4;
+}
+
+.project-card-thumb img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
-.project-featured-content {
+.project-card-body {
   flex: 1;
-  padding: 28px 28px 28px 0;
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
-.project-featured-no-img .project-featured-content {
-  padding: 28px;
-}
-
-.project-featured-top {
+.project-card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 8px;
 }
 
-.project-link-icon {
+.project-gh {
   color: var(--color-muted);
   flex-shrink: 0;
-  transition: color 0.2s, transform 0.2s;
+  transition: color 0.2s;
 }
 
-.project-featured:hover .project-link-icon {
-  color: var(--color-accent);
-  transform: translate(2px, -2px);
+.project-gh:hover {
+  color: var(--color-text);
+}
+
+.project-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
 }
 
 .project-tags {
@@ -365,92 +381,14 @@ ul {
 }
 
 .project-tags .tag {
-  padding: 4px 10px;
-  font-size: 0.75rem;
-}
-
-.project-highlights {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin-top: 4px;
-}
-
-.project-highlight {
-  font-size: 0.8rem;
-  color: var(--color-muted);
-  font-weight: 500;
-  position: relative;
-  padding-left: 14px;
-}
-
-.project-highlight::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--color-accent);
-}
-
-/* === Subsection Title === */
-.subsection-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--color-muted);
-  margin-bottom: 16px;
-  margin-top: 12px;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  font-size: 0.8rem;
-}
-
-/* === Projects Grid === */
-.projects-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 16px;
-}
-
-.project-card {
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  padding: 24px;
-  background: var(--color-card-bg);
-  transition: border-color 0.2s, box-shadow 0.2s;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.project-card:hover {
-  border-color: var(--color-accent);
-  box-shadow: 0 2px 12px rgba(122, 162, 212, 0.12);
-}
-
-.project-card-top {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.project-card-icon {
-  color: var(--color-accent);
-  flex-shrink: 0;
-}
-
-.project-name {
-  font-size: 1.05rem;
-  font-weight: 600;
+  padding: 3px 10px;
+  font-size: 0.7rem;
 }
 
 .project-desc {
   font-size: 0.875rem;
-  color: #94a3b8;
-  line-height: 1.65;
+  color: var(--color-muted);
+  line-height: 1.6;
 }
 
 /* === Skills === */
@@ -548,17 +486,20 @@ ul {
     padding: 72px 0;
   }
 
-  .project-featured {
+  .project-card-wide { padding: 0; }
+
+  .project-card-inner {
     flex-direction: column;
   }
 
-  .project-featured-img {
+  .project-card-thumb {
     flex: none;
-    height: 220px;
+    height: 180px;
+    border-radius: 8px 8px 0 0;
   }
 
-  .project-featured-content {
-    padding: 24px;
+  .project-card-body {
+    padding: 20px;
   }
 
   .projects-grid {
@@ -583,7 +524,7 @@ ul {
     top: var(--nav-height);
     left: 0;
     right: 0;
-    background: rgba(15, 23, 42, 0.98);
+    background: rgba(237, 232, 223, 0.98);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     flex-direction: column;

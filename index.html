@@ -107,40 +107,36 @@
   <section class="section" id="projects">
     <div class="container fade-in">
       <h2 class="section-title">Projects</h2>
+      <div class="projects-grid">
 
-      <!-- Featured Project: PCB -->
-      <a href="https://github.com/RishiSingh0/Data-Acquisition-Module-PCB" target="_blank" rel="noopener" class="project-featured">
-        <div class="project-featured-img">
-          <img src="images/pcb-front.png" alt="Data Acquisition Module PCB — assembled front side" loading="lazy">
-        </div>
-        <div class="project-featured-content">
-          <div class="project-featured-top">
-            <h3 class="project-name">Data Acquisition Module PCB</h3>
-            <span class="project-link-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
-            </span>
-          </div>
-          <div class="project-tags">
-            <span class="tag">Altium Designer</span>
-            <span class="tag">C</span>
-            <span class="tag">Zephyr RTOS</span>
-            <span class="tag">nRF52840</span>
-          </div>
-          <p class="project-desc">Designed and fabricated a 6-layer PCB (50&times;50mm) serving as the central data acquisition system for a human-powered submarine. Integrates barometric pressure, temperature/humidity sensors, propeller RPM tracking, and onboard SD card logging. Solved long-distance I2C failures with UART+LVDS signaling and cascaded logic level shifters for LED voltage mismatch.</p>
-          <div class="project-highlights">
-            <span class="project-highlight">6-Layer PCB</span>
-            <span class="project-highlight">BT840F MCU</span>
-            <span class="project-highlight">I2C / UART / LVDS</span>
-            <span class="project-highlight">JLCPCB Fabrication</span>
+        <!-- PCB — spans full width -->
+        <div class="project-card project-card-wide">
+          <div class="project-card-inner">
+            <div class="project-card-thumb">
+              <img src="images/pcb-front.png" alt="Assembled PCB front side" loading="lazy">
+            </div>
+            <div class="project-card-body">
+              <div class="project-card-header">
+                <h3 class="project-name">Data Acquisition Module PCB</h3>
+                <a href="https://github.com/RishiSingh0/Data-Acquisition-Module-PCB" target="_blank" rel="noopener" class="project-gh" aria-label="View on GitHub">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                </a>
+              </div>
+              <div class="project-tags">
+                <span class="tag">Altium Designer</span>
+                <span class="tag">C</span>
+                <span class="tag">Zephyr RTOS</span>
+                <span class="tag">nRF52840</span>
+              </div>
+              <p class="project-desc">Designed and fabricated a 6-layer PCB (50&times;50mm) for a human-powered submarine. Integrates barometric pressure, temperature/humidity sensors, propeller RPM tracking, and SD card logging. Solved long-distance I2C failures with UART+LVDS signaling and cascaded logic level shifters for LED voltage mismatch.</p>
+            </div>
           </div>
         </div>
-      </a>
 
-      <!-- Featured Project: Data Acquisition System -->
-      <div class="project-featured project-featured-no-img">
-        <div class="project-featured-content">
-          <div class="project-featured-top">
-            <h3 class="project-name">Real-Time IMU &amp; Video Sync System</h3>
+        <!-- IMU & Video Sync -->
+        <div class="project-card">
+          <div class="project-card-header">
+            <h3 class="project-name">Real-Time IMU &amp; Video Sync</h3>
           </div>
           <div class="project-tags">
             <span class="tag">Xilinx Zynq-7010</span>
@@ -148,22 +144,12 @@
             <span class="tag">Python</span>
             <span class="tag">C</span>
           </div>
-          <p class="project-desc">Developing a hardware-software framework to synchronize high-speed IMU data with 120fps video from an AR0234 global shutter camera. Uses a Red Pitaya (Zynq-7010 SoC) for precise FPGA-timed data acquisition and a Raspberry Pi 5 for video processing, enabling frame-accurate sensor-video alignment for research in sensorimotor physiology.</p>
-          <div class="project-highlights">
-            <span class="project-highlight">FPGA Timestamping</span>
-            <span class="project-highlight">120fps Sync</span>
-            <span class="project-highlight">SoC Architecture</span>
-          </div>
+          <p class="project-desc">Hardware-software framework synchronizing high-speed IMU data with 120fps video from an AR0234 global shutter camera. Uses a Red Pitaya SoC for FPGA-timed acquisition and a Raspberry Pi 5 for video processing.</p>
         </div>
-      </div>
 
-      <!-- FPGA Project Grid -->
-      <h3 class="subsection-title">FPGA &amp; Digital Design</h3>
-      <div class="projects-grid">
-
+        <!-- ARC4 -->
         <div class="project-card">
-          <div class="project-card-top">
-            <svg class="project-card-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="M7 2v20"/><path d="M17 2v20"/><path d="M2 7h20"/><path d="M2 17h20"/></svg>
+          <div class="project-card-header">
             <h3 class="project-name">ARC4 Encryption Core</h3>
           </div>
           <div class="project-tags">
@@ -171,31 +157,31 @@
             <span class="tag">DE1-SoC</span>
             <span class="tag">M10K RAM</span>
           </div>
-          <p class="project-desc">Designed and verified a complete ARC4 stream cipher core using hierarchical FSMs implementing Init, Key-Scheduling (KSA), and Pseudo-Random Generation (PRGA) algorithms. Interfaced with embedded FPGA memory blocks via ready-enable handshake protocols. Extended to a brute-force cracking engine with parallel decryption units.</p>
+          <p class="project-desc">Complete ARC4 stream cipher using hierarchical FSMs for Init, Key-Scheduling, and Pseudo-Random Generation with ready-enable handshake protocols. Extended to a brute-force cracking engine with parallel decryption units.</p>
         </div>
 
+        <!-- VGA -->
         <div class="project-card">
-          <div class="project-card-top">
-            <svg class="project-card-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+          <div class="project-card-header">
             <h3 class="project-name">VGA Display Controller</h3>
           </div>
           <div class="project-tags">
             <span class="tag">SystemVerilog</span>
             <span class="tag">DE1-SoC</span>
           </div>
-          <p class="project-desc">Designed state machines driving a VGA display controller (160&times;120 pixel framebuffer). Implemented integer-only Bresenham's Circle algorithm and Reuleaux Triangle construction with pixel-accurate clipping, optimizing datapath logic to meet cycle-accurate timing budgets.</p>
+          <p class="project-desc">State machines driving a 160&times;120 pixel VGA framebuffer. Implemented integer-only Bresenham's Circle algorithm and Reuleaux Triangle construction with pixel-accurate clipping and cycle-accurate timing.</p>
         </div>
 
+        <!-- Baccarat -->
         <div class="project-card">
-          <div class="project-card-top">
-            <svg class="project-card-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="22" height="12" rx="2"/><path d="M5 6V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2"/><path d="M12 12h.01"/></svg>
+          <div class="project-card-header">
             <h3 class="project-name">Baccarat Game Simulator</h3>
           </div>
           <div class="project-tags">
             <span class="tag">SystemVerilog</span>
             <span class="tag">DE1-SoC</span>
           </div>
-          <p class="project-desc">Built a full Baccarat card game engine on the DE1-SoC FPGA, implementing core game logic with a Moore FSM controlling card dealing, scoring, and third-card rules. Drove 7-segment displays for real-time hand visualization. Achieved 100% design verification with comprehensive RTL and post-synthesis testbenches.</p>
+          <p class="project-desc">Baccarat card game engine on the DE1-SoC FPGA using a Moore FSM for card dealing, scoring, and third-card rules. 7-segment display output with 100% RTL and post-synthesis testbench verification.</p>
         </div>
 
       </div>
