@@ -157,7 +157,7 @@
             <span class="tag">DE1-SoC</span>
             <span class="tag">M10K RAM</span>
           </div>
-          <p class="project-desc">Complete ARC4 stream cipher using hierarchical FSMs for Init, Key-Scheduling, and Pseudo-Random Generation with ready-enable handshake protocols. Extended to a brute-force cracking engine with parallel decryption units.</p>
+          <p class="project-desc">Implemented the ARC4 stream cipher in hardware, coordinating five interdependent FSMs (Init, KSA, PRGA, Arc4 orchestrator, Crack) through a custom ready-enable handshake protocol to share a single-port M10K memory. Extended into a brute-force key cracker with 51 parallel cores searching disjoint key ranges, achieving ~93&times; speedup over the single-core baseline (~1.5s to exhaust 2<sup>24</sup> keys).</p>
         </div>
 
         <!-- VGA -->
@@ -169,7 +169,7 @@
             <span class="tag">SystemVerilog</span>
             <span class="tag">DE1-SoC</span>
           </div>
-          <p class="project-desc">State machines driving a 160&times;120 pixel VGA framebuffer. Implemented integer-only Bresenham's Circle algorithm and Reuleaux Triangle construction with pixel-accurate clipping and cycle-accurate timing.</p>
+          <p class="project-desc">Built a graphics rendering pipeline driving a 160&times;120 VGA framebuffer at one pixel per clock cycle. Implemented integer-only Bresenham's circle algorithm with 8-fold symmetry via an octant-rotating counter, then constructed Reuleaux triangles from three overlapping partial circles using fixed-point &radic;3 arithmetic (10-bit scaling). Includes combinational clipping logic for out-of-bounds drawing.</p>
         </div>
 
         <!-- Baccarat -->
@@ -181,7 +181,7 @@
             <span class="tag">SystemVerilog</span>
             <span class="tag">DE1-SoC</span>
           </div>
-          <p class="project-desc">Baccarat card game engine on the DE1-SoC FPGA using a Moore FSM for card dealing, scoring, and third-card rules. 7-segment display output with 100% RTL and post-synthesis testbench verification.</p>
+          <p class="project-desc">Designed a Baccarat card game engine with a clean datapath/controller split &mdash; a 10-state Moore FSM drives dealing logic and third-card rules while a separate datapath handles card registers, modulo-10 scoring, and 7-segment decoding. Uses dual clock domains (50 MHz fast clock sampled by button press) to generate unpredictable card deals without a true RNG.</p>
         </div>
 
       </div>
