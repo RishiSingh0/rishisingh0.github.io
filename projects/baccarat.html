@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Baccarat Game Simulator — Rishi Singh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="../index.html#hero" class="nav-logo">RS</a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../index.html#experience">Experience</a></li>
+        <li><a href="../index.html#projects">Projects</a></li>
+        <li><a href="../index.html#skills">Skills</a></li>
+        <li><a href="../index.html#education">Education</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="project-detail">
+    <div class="container">
+
+      <a href="../index.html#projects" class="back-link">&larr; Back to Projects</a>
+
+      <div class="project-detail-header">
+        <h1>Baccarat Game Simulator</h1>
+        <div class="project-tags">
+          <span class="tag">SystemVerilog</span>
+          <span class="tag">DE1-SoC</span>
+        </div>
+        <p class="project-detail-summary">Complete Baccarat card game engine implemented entirely in hardware on an FPGA.</p>
+      </div>
+
+      <section class="project-detail-section">
+        <h2>Overview</h2>
+        <p>This project implements the full Baccarat card game &mdash; dealing, scoring, third-card rules, and win/loss determination &mdash; as a pure hardware design on the DE1-SoC. A clean datapath/controller architecture separates game logic from data manipulation: a 10-state Moore FSM drives the dealing sequence while a dedicated datapath handles card registers, modulo-10 scoring, and 7-segment display decoding. Card randomness comes from a dual-clock domain technique where a fast 50 MHz counter is sampled at the moment of a human button press.</p>
+      </section>
+
+      <section class="project-detail-section">
+        <h2>What I Built</h2>
+        <ul class="highlight-list">
+          <li><strong>statemachine</strong> &mdash; 10-state Moore FSM implementing the complete Baccarat dealing sequence, including all third-card draw rules</li>
+          <li><strong>scorehand</strong> &mdash; Combinational scoring module that sums card values modulo 10 (face cards count as 0)</li>
+          <li><strong>card7seg</strong> &mdash; Maps 4-bit card values to 7-segment display patterns (A, 2&ndash;9, T, J, Q, K)</li>
+          <li><strong>datapath</strong> &mdash; Registers for up to 6 cards, wired to scorehand and card7seg modules, controlled by load signals from the FSM</li>
+        </ul>
+      </section>
+
+      <section class="project-detail-section">
+        <h2>Design Highlights</h2>
+        <ul class="highlight-list">
+          <li><strong>Clean datapath/controller split</strong> &mdash; The FSM outputs only one-hot load signals (load_pcard1, load_dcard2, etc.) while the datapath handles all data storage and computation. This separation makes each module independently testable and the overall design easy to reason about.</li>
+          <li><strong>Dual-clock randomness</strong> &mdash; A counter running on the 50 MHz system clock is sampled on the rising edge of a debounced button press. Since the button timing is asynchronous to the counter, the sampled value is effectively random &mdash; no LFSR or true RNG needed.</li>
+          <li><strong>Modulo-10 scoring in combinational logic</strong> &mdash; Card values are summed and reduced mod 10 in a single combinational block, avoiding multi-cycle division. Face cards (value &ge; 10) are masked to 0 before summation.</li>
+        </ul>
+      </section>
+
+      <section class="project-detail-section">
+        <h2>Code: State Machine Transitions</h2>
+        <p>The FSM walks through the mandatory dealing sequence (P1 &rarr; D1 &rarr; P2 &rarr; D2), then applies the full Baccarat third-card rules before reaching a terminal win/loss/tie state.</p>
+        <pre class="code-block"><code>// statemachine.sv — Baccarat dealing FSM
+
+`define P1 4'b0000  // Player card 1
+`define D1 4'b0001  // Dealer card 1
+`define P2 4'b0010  // Player card 2
+`define D2 4'b0011  // Dealer card 2
+`define P3 4'b0100  // Player card 3
+`define D3 4'b0101  // Dealer card 3
+`define D  4'b0110  // Decider
+`define DW 4'b0111  // Dealer Win
+`define PW 4'b1000  // Player Win
+`define T  4'b1001  // Tie
+
+always_comb begin
+    case(present_state)
+    `P1: next_state = `D1;
+    `D1: next_state = `P2;
+    `P2: next_state = `D2;
+
+    `D2: begin
+        if ((dscore >= 8) || (pscore >= 8))
+            next_state = `D;              // Natural — skip to decider
+        else if (pscore <= 5)
+            next_state = `P3;             // Player draws third card
+        else if (dscore <= 5)
+            next_state = `D3;             // Player stands, dealer draws
+        else
+            next_state = `D;
+    end
+
+    `P3: begin  // Dealer third-card rules (depend on player's third card)
+        if ((dscore == 6) && ((pcard3 == 6) || (pcard3 == 7)))
+            next_state = `D3;
+        else if ((dscore == 5) && (pcard3 >= 4) && (pcard3 <= 7))
+            next_state = `D3;
+        else if ((dscore == 4) && (pcard3 >= 2) && (pcard3 <= 7))
+            next_state = `D3;
+        else if ((dscore == 3) && (pcard3 != 8))
+            next_state = `D3;
+        else if (dscore <= 2)
+            next_state = `D3;
+        else
+            next_state = `D;
+    end
+
+    `D3: next_state = `D;
+
+    `D: begin  // Decider — compare final scores
+        if (dscore > pscore)      next_state = `DW;
+        else if (pscore > dscore) next_state = `PW;
+        else                      next_state = `T;
+    end
+
+    `PW: next_state = `PW;   // Terminal — hold until reset
+    `DW: next_state = `DW;
+    `T:  next_state = `T;
+    default: next_state = `P1;
+    endcase
+end</code></pre>
+      </section>
+
+      <section class="project-detail-section">
+        <h2>Code: Output Logic</h2>
+        <p>Each state asserts exactly one load signal, making the controller a pure Moore machine &mdash; outputs depend only on the current state.</p>
+        <pre class="code-block"><code>// statemachine.sv — One-hot output decoding
+
+always_comb begin
+    case(present_state)
+    `P1: begin load_pcard1=1; load_pcard2=0; load_pcard3=0;
+               load_dcard1=0; load_dcard2=0; load_dcard3=0;
+               player_win_light=0; dealer_win_light=0; end
+    `D1: begin load_pcard1=0; load_dcard1=1; /* others 0 */ end
+    `P2: begin load_pcard2=1; /* others 0 */ end
+    `D2: begin load_dcard2=1; /* others 0 */ end
+    `P3: begin load_pcard3=1; /* others 0 */ end
+    `D3: begin load_dcard3=1; /* others 0 */ end
+    `D:  begin /* all loads 0, all lights 0 */ end
+    `PW: begin player_win_light=1; dealer_win_light=0; end
+    `DW: begin player_win_light=0; dealer_win_light=1; end
+    `T:  begin player_win_light=1; dealer_win_light=1; end
+    endcase
+end</code></pre>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 Rishi Singh</p>
+    </div>
+  </footer>
+
+  <script src="../script.js"></script>
+</body>
+</html>

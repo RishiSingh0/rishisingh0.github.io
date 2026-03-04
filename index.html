@@ -158,6 +158,7 @@
             <span class="tag">M10K RAM</span>
           </div>
           <p class="project-desc">Implemented the ARC4 stream cipher in hardware, coordinating five interdependent FSMs (Init, KSA, PRGA, Arc4 orchestrator, Crack) through a custom ready-enable handshake protocol to share a single-port M10K memory. Extended into a brute-force key cracker with 51 parallel cores searching disjoint key ranges, achieving ~93&times; speedup over the single-core baseline (~1.5s to exhaust 2<sup>24</sup> keys).</p>
+          <a href="projects/arc4.html" class="project-link">View Project &rarr;</a>
         </div>
 
         <!-- VGA -->
@@ -170,6 +171,7 @@
             <span class="tag">DE1-SoC</span>
           </div>
           <p class="project-desc">Built a graphics rendering pipeline driving a 160&times;120 VGA framebuffer at one pixel per clock cycle. Implemented integer-only Bresenham's circle algorithm with 8-fold symmetry via an octant-rotating counter, then constructed Reuleaux triangles from three overlapping partial circles using fixed-point &radic;3 arithmetic (10-bit scaling). Includes combinational clipping logic for out-of-bounds drawing.</p>
+          <a href="projects/vga.html" class="project-link">View Project &rarr;</a>
         </div>
 
         <!-- Baccarat -->
@@ -182,6 +184,7 @@
             <span class="tag">DE1-SoC</span>
           </div>
           <p class="project-desc">Designed a Baccarat card game engine with a clean datapath/controller split &mdash; a 10-state Moore FSM drives dealing logic and third-card rules while a separate datapath handles card registers, modulo-10 scoring, and 7-segment decoding. Uses dual clock domains (50 MHz fast clock sampled by button press) to generate unpredictable card deals without a true RNG.</p>
+          <a href="projects/baccarat.html" class="project-link">View Project &rarr;</a>
         </div>
 
       </div>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARC4 Encryption Core — Rishi Singh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="../index.html#hero" class="nav-logo">RS</a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../index.html#experience">Experience</a></li>
+        <li><a href="../index.html#projects">Projects</a></li>
+        <li><a href="../index.html#skills">Skills</a></li>
+        <li><a href="../index.html#education">Education</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="project-detail">
+    <div class="container">
+
+      <a href="../index.html#projects" class="back-link">&larr; Back to Projects</a>
+
+      <div class="project-detail-header">
+        <h1>ARC4 Encryption Core</h1>
+        <div class="project-tags">
+          <span class="tag">SystemVerilog</span>
+          <span class="tag">DE1-SoC</span>
+          <span class="tag">M10K RAM</span>
+        </div>
+        <p class="project-detail-summary">Full ARC4 stream cipher in hardware, extended into a 51-core brute-force key cracker.</p>
+      </div>
+
+      <section class="project-detail-section">
+        <h2>Overview</h2>
+        <p>This project implements the complete ARC4 (alleged RC4) stream cipher as a hardware accelerator on the DE1-SoC FPGA. Five interdependent finite state machines coordinate through a custom ready-enable handshake protocol to share a single-port M10K memory. In a bonus extension, the design was scaled to 51 parallel cracking cores that search disjoint key ranges simultaneously, achieving ~93&times; speedup over a single core and exhausting all 2<sup>24</sup> candidate keys in roughly 1.5 seconds.</p>
+      </section>
+
+      <section class="project-detail-section">
+        <h2>What I Built</h2>
+        <ul class="highlight-list">
+          <li><strong>init</strong> &mdash; Initializes the 256-byte S-box to identity permutation</li>
+          <li><strong>ksa</strong> &mdash; Key Scheduling Algorithm; permutes S-box using the secret key</li>
+          <li><strong>prga</strong> &mdash; Pseudo-Random Generation Algorithm; produces the cipher byte stream</li>
+          <li><strong>arc4</strong> &mdash; Top-level orchestrator sequencing Init &rarr; KSA &rarr; PRGA through ready-enable handshakes</li>
+          <li><strong>crack</strong> &mdash; Single-core brute-force engine that iterates over a key range, running ARC4 decryption and validating output as printable ASCII</li>
+          <li><strong>doublecrack</strong> &mdash; Parallel wrapper instantiating 51 crack cores with disjoint key partitions</li>
+        </ul>
+      </section>
+
+      <section class="project-detail-section">
+        <h2>Design Highlights</h2>
+        <ul class="highlight-list">
+          <li><strong>Ready-enable handshake protocol</strong> &mdash; Each FSM asserts <code>rdy</code> when idle and waits for <code>en</code> from its parent. This lets all five modules safely share a single-port M10K memory without bus arbitration hardware.</li>
+          <li><strong>51-core parallel cracking</strong> &mdash; The 2<sup>24</sup> key space is partitioned into 51 contiguous ranges. Each core runs independently with its own S-box memory, achieving ~93&times; wall-clock speedup (~1.5s total search).</li>
+          <li><strong>ASCII validation for early termination</strong> &mdash; During PRGA, each decrypted byte is checked against the printable range (0x20&ndash;0x7E). A single non-printable character aborts that key immediately, avoiding wasted cycles on wrong keys.</li>
+        </ul>
+      </section>
+
+      <section class="project-detail-section">
+        <h2>Code: KSA State Machine</h2>
+        <p>The Key Scheduling Algorithm permutes the S-box by swapping elements based on the secret key. Each state maps to a specific memory operation on the shared single-port RAM.</p>
+        <pre class="code-block"><code>// ksa.sv — Key Scheduling Algorithm FSM
+`define READY     3'b000
+`define READ_MEM1 3'b001  // Read S[j]
+`define R_W_MEM1  3'b010  // Write S[i] to address j
+`define WRITE_MEM2 3'b011 // Write S[j] to address i
+`define IDLE1     3'b100  // Set up read address for S[i]
+`define IDLE2     3'b101  // Compute j = j + S[i] + key[i % 3]
+
+always_comb begin
+    case(state)
+        `READY: begin
+            if (en) next_state = `IDLE1;
+            else    next_state = `READY;
+        end
+        `READ_MEM1: next_state = `R_W_MEM1;
+        `R_W_MEM1:  next_state = `WRITE_MEM2;
+        `WRITE_MEM2: begin
+            if (I > 254) next_state = `READY;  // Done — all 256 entries permuted
+            else         next_state = `IDLE1;   // Next iteration
+        end
+        `IDLE1: next_state = `IDLE2;
+        `IDLE2: next_state = `READ_MEM1;
+        default: next_state = `READY;
+    endcase
+end
+
+// j update: the core KSA recurrence
+`IDLE2: begin
+    next_J = J + rddata + keys[I % KEYLENGTH];
+end</code></pre>
+      </section>
+
+      <section class="project-detail-section">
+        <h2>Code: Crack Core — ASCII Validation</h2>
+        <p>Each crack core runs ARC4 decryption and checks every output byte in real time. A single non-printable character flags the key as invalid, allowing immediate abort.</p>
+        <pre class="code-block"><code>// crack.sv — Brute-force key search with early termination
+
+// State transitions
+always_comb begin
+    case(state)
+        READY: begin
+            if (en) next_state = RUN_ARC4;
+            else    next_state = READY;
+        end
+        RUN_ARC4: begin
+            if (arc4_rdy && arc4_started) next_state = DONE_ARC4;
+            else                          next_state = RUN_ARC4;
+        end
+        DONE_ARC4: begin
+            if (test_key < dc_stopkey) begin
+                if (pt_test == 1'b1) next_state = RUN_ARC4;  // Wrong key, try next
+                else                 next_state = READY;      // Key found!
+            end
+            else next_state = READY;  // All keys exhausted
+        end
+        default: next_state = READY;
+    endcase
+end
+
+// ASCII check during decryption — abort on non-printable byte
+RUN_ARC4: begin
+    if ((pt_wren == 1'b1) && (pt_addr != 8'd0)) begin
+        if ((pt_wrdata < 8'h20) || (pt_wrdata > 8'h7E))
+            next_pt_test = 1'b1;   // Non-printable → wrong key
+        else
+            next_pt_test = pt_test;
+    end
+end</code></pre>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 Rishi Singh</p>
+    </div>
+  </footer>
+
+  <script src="../script.js"></script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VGA Display Controller — Rishi Singh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="../index.html#hero" class="nav-logo">RS</a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../index.html#experience">Experience</a></li>
+        <li><a href="../index.html#projects">Projects</a></li>
+        <li><a href="../index.html#skills">Skills</a></li>
+        <li><a href="../index.html#education">Education</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="project-detail">
+    <div class="container">
+
+      <a href="../index.html#projects" class="back-link">&larr; Back to Projects</a>
+
+      <div class="project-detail-header">
+        <h1>VGA Display Controller</h1>
+        <div class="project-tags">
+          <span class="tag">SystemVerilog</span>
+          <span class="tag">DE1-SoC</span>
+        </div>
+        <p class="project-detail-summary">Graphics rendering pipeline driving a 160&times;120 VGA framebuffer at one pixel per clock cycle.</p>
+      </div>
+
+      <section class="project-detail-section">
+        <h2>Overview</h2>
+        <p>This project builds a complete graphics engine that renders geometric shapes to a VGA monitor through the DE1-SoC's video output. The pipeline writes to a 160&times;120 pixel framebuffer at a throughput of one pixel per clock cycle. It implements Bresenham's circle algorithm using pure integer arithmetic, an 8-fold symmetry optimization via an octant-rotating counter, and Reuleaux triangle construction using fixed-point &radic;3 arithmetic with 10-bit scaling. All drawing includes combinational bounds checking to clip pixels outside the visible area.</p>
+      </section>
+
+      <section class="project-detail-section">
+        <h2>What I Built</h2>
+        <ul class="highlight-list">
+          <li><strong>fillscreen</strong> &mdash; Fills the entire framebuffer with a colour pattern, iterating through all 19,200 pixels sequentially</li>
+          <li><strong>circle</strong> &mdash; Draws circles using Bresenham's midpoint algorithm; a 3-bit octant counter plots 8 symmetric points per iteration</li>
+          <li><strong>reuleaux</strong> &mdash; Constructs Reuleaux triangles from three overlapping partial circle arcs, computing arc centers with fixed-point &radic;3 math</li>
+        </ul>
+      </section>
+
+      <section class="project-detail-section">
+        <h2>Design Highlights</h2>
+        <ul class="highlight-list">
+          <li><strong>One pixel per clock cycle</strong> &mdash; The pipeline architecture writes a pixel every clock cycle during active drawing, maximizing framebuffer throughput without stalls or wait states.</li>
+          <li><strong>8-fold symmetry via octant counter</strong> &mdash; Instead of computing 8 separate pixels, a single (offset_x, offset_y) pair is reflected across all octants using a 3-bit rotating counter. This produces a complete circle in &frac18; the Bresenham iterations.</li>
+          <li><strong>Fixed-point &radic;3 arithmetic</strong> &mdash; Reuleaux triangle vertices require &radic;3 offsets from the center. A 10-bit fixed-point representation (multiply by 1774, right-shift by 10) avoids floating point entirely while maintaining sub-pixel accuracy at the 160&times;120 resolution.</li>
+        </ul>
+      </section>
+
+      <section class="project-detail-section">
+        <h2>Code: Bresenham Circle — Octant Drawing</h2>
+        <p>Each Bresenham step computes one (offset_x, offset_y) pair. The 3-bit <code>ptest</code> counter reflects it across all 8 octants before advancing to the next midpoint decision.</p>
+        <pre class="code-block"><code>// circle.sv — 8-fold symmetric Bresenham circle drawing
+
+if (offset_y <= offset_x) begin
+    color <= colour;
+    plot  <= 1'b1;
+
+    if (ptest == 3'b000) begin        // Octant 1
+         x <= centre_x + offset_x;
+         y <= centre_y + offset_y;
+         ptest <= ptest + 1'b1;
+    end else if (ptest == 3'b001) begin  // Octant 2
+         x <= centre_x + offset_y;
+         y <= centre_y + offset_x;
+         ptest <= ptest + 1'b1;
+    end else if (ptest == 3'b010) begin  // Octant 3
+         x <= centre_x - offset_y;
+         y <= centre_y + offset_x;
+         ptest <= ptest + 1'b1;
+    end else if (ptest == 3'b011) begin  // Octant 4
+         x <= centre_x - offset_x;
+         y <= centre_y + offset_y;
+         ptest <= ptest + 1'b1;
+    end else if (ptest == 3'b100) begin  // Octant 5
+         x <= centre_x - offset_x;
+         y <= centre_y - offset_y;
+         ptest <= ptest + 1'b1;
+    end else if (ptest == 3'b101) begin  // Octant 6
+         x <= centre_x - offset_y;
+         y <= centre_y - offset_x;
+         ptest <= ptest + 1'b1;
+    end else if (ptest == 3'b110) begin  // Octant 7
+         x <= centre_x + offset_y;
+         y <= centre_y - offset_x;
+         ptest <= ptest + 1'b1;
+    end else if (ptest == 3'b111) begin  // Octant 8 — advance Bresenham
+         x <= centre_x + offset_x;
+         y <= centre_y - offset_y;
+         ptest <= 3'b000;
+
+         offset_y <= offset_y + 10'sd1;
+         if (crit <= 8'sd0)
+              crit <= crit + 2 * (offset_y + 1) + 1;
+         else begin
+              offset_x <= offset_x - 10'sd1;
+              crit <= crit + 2 * ((offset_y + 1) - (offset_x - 1)) + 1;
+         end
+    end
+end</code></pre>
+      </section>
+
+      <section class="project-detail-section">
+        <h2>Code: Bounds Clipping</h2>
+        <p>Pixels outside the 160&times;120 framebuffer are suppressed combinationally &mdash; the VGA plot signal is gated so no write occurs for out-of-bounds coordinates.</p>
+        <pre class="code-block"><code>// circle.sv — combinational clipping logic
+
+always_comb begin
+    if (STATE != 1'b0)
+        if ((x >= 10'sd0) && (y >= 10'sd0) &&
+            (x < 10'sd160) && (y < 10'sd120))
+            in_bounds = 1'b1;
+        else
+            in_bounds = 1'b0;
+    else
+        in_bounds = 1'b1;
+end
+
+assign vga_plot = plot & in_bounds;</code></pre>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 Rishi Singh</p>
+    </div>
+  </footer>
+
+  <script src="../script.js"></script>
+</body>
+</html>
