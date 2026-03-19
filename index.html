@@ -39,7 +39,8 @@
       <p class="hero-title">Electrical Engineering Student &amp; Embedded Systems Developer</p>
       <p class="hero-tagline">Building real-time data acquisition systems, designing PCBs, and writing firmware at UBC.</p>
       <div class="hero-links">
-        <a href="mailto:rishirsingh0@gmail.com" class="btn">Email Me</a>
+        <a href="Resume_Rishi_Singh.pdf" download class="btn">Download Resume</a>
+        <a href="mailto:rishirsingh0@gmail.com" class="btn btn-outline">Email Me</a>
         <a href="https://github.com/RishiSingh0" target="_blank" rel="noopener" class="btn btn-outline">GitHub</a>
         <a href="https://linkedin.com/in/devrishisingh/" target="_blank" rel="noopener" class="btn btn-outline">LinkedIn</a>
       </div>
@@ -68,8 +69,8 @@
           <span class="entry-date">Jan 2026 &ndash; Present</span>
         </div>
         <ul class="entry-list">
-          <li>Developing a real-time data acquisition system using a Xilinx Zynq-7010 SoC to hardware-synchronize high-frequency IMU data with 120fps video from an AR0234 global shutter camera on a Raspberry Pi 5</li>
-          <li>Developing technical infrastructure for laboratory-specific data acquisition by integrating FPGAs, Microcontrollers, and Integrated Circuits to support various research requirements</li>
+          <li>Built a real-time data acquisition system on a Raspberry Pi 5 synchronizing 6-axis IMU data (up to 1660 Hz via I2C) with 120fps video from a TechNexion AR0234 global shutter camera, using a GStreamer H.264 pipeline with PTS-based frame timestamps</li>
+          <li>Benchmarked and optimized video encoding, reducing frame drop rate from 25.3% to 14.1% at 720p/120fps; authored a migration proposal to NVIDIA Jetson Orin Nano for hardware-accelerated encoding to achieve zero frame drops</li>
         </ul>
       </div>
 
@@ -82,8 +83,8 @@
           <span class="entry-date">Sep 2024 &ndash; Present</span>
         </div>
         <ul class="entry-list">
-          <li>Designed and fabricated a specialized Data Acquisition Module PCB for the BT840F microcontroller; troubleshot and verified other members' PCB designs and fabrication</li>
-          <li>Led team of 15 through full product development cycle, establishing design standards and conducting weekly technical reviews to ensure project milestones were met</li>
+          <li>Designed and fabricated a 6-layer PCB (50&times;50mm) in Altium Designer integrating nRF52840 SoC, environmental sensors, and multi-protocol communication (SPI, I2C, UART, LVDS)</li>
+          <li>Trained 15 members in Altium Designer, SMT/reflow soldering, and component sourcing; initiated an electronic steering system project, coordinating research across motor drivers and feedback sensors</li>
         </ul>
       </div>
 
@@ -96,7 +97,7 @@
           <span class="entry-date">Sep 2018 &ndash; Sep 2023</span>
         </div>
         <ul class="entry-list">
-          <li>Executed 24/7 maintenance, testing, and calibration on critical avionics systems (Radar, Crypto/Communication, Flight Control, Autopilot, Fire Suppression, Data Recorders, TCAS) for CC-130J Hercules aircraft</li>
+          <li>Executed 24/7 maintenance, testing, and calibration on critical avionics systems (Radar, Crypto/Communication, Flight Control, Autopilot, TCAS) for CC-130J Hercules aircraft</li>
           <li>Ensured high operational readiness supporting key global missions, including the evacuation of 3,700 civilians (Op AEGIS) and the delivery of 16 million pounds of military aid (Op REASSURANCE)</li>
         </ul>
       </div>
@@ -139,12 +140,12 @@
             <h3 class="project-name">Real-Time IMU &amp; Video Sync</h3>
           </div>
           <div class="project-tags">
-            <span class="tag">Xilinx Zynq-7010</span>
             <span class="tag">Raspberry Pi 5</span>
             <span class="tag">Python</span>
-            <span class="tag">C</span>
+            <span class="tag">GStreamer</span>
+            <span class="tag">I2C</span>
           </div>
-          <p class="project-desc">Hardware-software framework synchronizing high-speed IMU data with 120fps video from an AR0234 global shutter camera. Uses a Red Pitaya SoC for FPGA-timed acquisition and a Raspberry Pi 5 for video processing.</p>
+          <p class="project-desc">Data acquisition framework synchronizing 6-axis IMU data (up to 1660 Hz via I2C) with 120fps global shutter video on a Raspberry Pi 5. Built a GStreamer H.264 encoding pipeline with PTS-based frame timestamps, optimizing bitrate and buffer settings to reduce frame drops from 25.3% to 14.1% at 720p/120fps. Authored migration proposal to NVIDIA Jetson Orin Nano for hardware-accelerated encoding.</p>
         </div>
 
         <!-- ARC4 -->
@@ -157,7 +158,7 @@
             <span class="tag">DE1-SoC</span>
             <span class="tag">M10K RAM</span>
           </div>
-          <p class="project-desc">Implemented the ARC4 stream cipher in hardware, coordinating five interdependent FSMs (Init, KSA, PRGA, Arc4 orchestrator, Crack) through a custom ready-enable handshake protocol to share a single-port M10K memory. Extended into a brute-force key cracker with 51 parallel cores searching disjoint key ranges, achieving ~93&times; speedup over the single-core baseline (~1.5s to exhaust 2<sup>24</sup> keys).</p>
+          <p class="project-desc">Designed a complete ARC4 encryption/decryption core using hierarchical FSMs (Init, KSA, PRGA) with ready-enable handshake protocols, interfacing custom RTL with 209 M10K embedded memory blocks. Scaled to 104 parallel cracking cores with PLL clock boosting and early-termination ASCII validation, exhausting the full 2<sup>24</sup> key space in 1.56s (10.75M keys/sec) on a Cyclone V FPGA &mdash; a 94&times; speedup over single-core baseline.</p>
           <a href="projects/arc4.html" class="project-link">View Project &rarr;</a>
         </div>
 
@@ -200,10 +201,10 @@
         <div class="skill-group">
           <h3 class="skill-category">Languages</h3>
           <div class="skill-tags">
-            <span class="tag">Python</span>
             <span class="tag">C/C++</span>
+            <span class="tag">Verilog/SystemVerilog</span>
+            <span class="tag">Python</span>
             <span class="tag">Assembly (ARM/8051)</span>
-            <span class="tag">Verilog/System Verilog</span>
             <span class="tag">Bash/Shell</span>
           </div>
         </div>
@@ -211,14 +212,14 @@
         <div class="skill-group">
           <h3 class="skill-category">Developer Tools</h3>
           <div class="skill-tags">
-            <span class="tag">MATLAB</span>
-            <span class="tag">Solidworks</span>
-            <span class="tag">Altium Designer</span>
             <span class="tag">Quartus</span>
             <span class="tag">ModelSim</span>
-            <span class="tag">Git</span>
-            <span class="tag">LTSpice</span>
             <span class="tag">Vivado</span>
+            <span class="tag">Altium Designer</span>
+            <span class="tag">Git</span>
+            <span class="tag">MATLAB</span>
+            <span class="tag">LTSpice</span>
+            <span class="tag">Solidworks</span>
             <span class="tag">Linux</span>
           </div>
         </div>
@@ -226,7 +227,7 @@
         <div class="skill-group">
           <h3 class="skill-category">Lab Equipment</h3>
           <div class="skill-tags">
-            <span class="tag">FPGA</span>
+            <span class="tag">FPGA (DE1-SoC)</span>
             <span class="tag">Digital Multimeter</span>
             <span class="tag">Oscilloscope</span>
             <span class="tag">Waveform Generator</span>
