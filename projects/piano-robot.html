@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Piano Robot Motherboard — Rishi Singh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="../index.html#hero" class="nav-logo">RS</a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../index.html#experience">Experience</a></li>
+        <li><a href="../index.html#projects">Projects</a></li>
+        <li><a href="../index.html#skills">Skills</a></li>
+        <li><a href="../index.html#education">Education</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="project-detail">
+    <div class="container">
+
+      <a href="../index.html#projects" class="back-link">&larr; Back to Projects</a>
+
+      <div class="project-detail-header">
+        <h1>Piano Robot Motherboard</h1>
+        <div class="project-tags">
+          <span class="tag">STM32F446</span>
+          <span class="tag">Altium Designer</span>
+          <span class="tag">C</span>
+          <span class="tag">SPI</span>
+          <span class="tag">I2C</span>
+          <span class="tag">USB</span>
+        </div>
+        <p class="project-detail-summary">STM32F446-based motherboard for a piano-playing robot, designed as part of a university design course. The full system was fabricated, assembled, tested, and successfully played a complete song.</p>
+      </div>
+
+      <section class="project-detail-section">
+        <h2>Overview</h2>
+        <p>The motherboard serves as the central controller for a piano-playing robot, interfacing with three daughter boards via board-to-board connectors: a solenoid actuator board for key-pressing, a motor driver board for lateral positioning along the keyboard, and a power board for regulated supply. All boards were designed in Altium Designer, assembled via hot plate reflow soldering, and integrated into a 3D-printed enclosure.</p>
+      </section>
+
+      <section class="project-detail-section">
+        <h2>System Architecture</h2>
+        <ul class="highlight-list">
+          <li><strong>Motherboard</strong> &mdash; STM32F446RET6 (ARM Cortex-M4, 180 MHz) with SPI (ILI9341 LCD, SD card), I2C (AS5600 magnetic encoder), USB (CDC virtual COM port and DFU firmware flashing), SWD debug header, and two GPIO expansion headers for probing</li>
+          <li><strong>Motor Driver Board</strong> &mdash; Optocoupler-isolated H-bridge using power MOSFETs (PMOS/NMOS), PWM-controlled via TIM1 channels, rated for 12V/8.5A stall current</li>
+          <li><strong>Solenoid Actuator Board</strong> &mdash; 4-channel solenoid driver with flyback diode protection for the key-pressing mechanisms</li>
+          <li><strong>Power Board</strong> &mdash; Regulated power supply with dual source selection: external 3.3V or USB 5V via AMS1117-3.3 LDO, with an SPDT break-before-make switch to prevent simultaneous connection</li>
+        </ul>
+      </section>
+
+      <section class="project-detail-section">
+        <h2>Design Highlights</h2>
+        <ul class="highlight-list">
+          <li><strong>USB with full ESD protection</strong> &mdash; USBLC6-2SC6 on D+/D- data lines and ESDA7P60 TVS on VBUS, with 90-ohm differential pair routing per ST AN4879 guidelines</li>
+          <li><strong>Decoupling per ST AN4488</strong> &mdash; Individual 100nF caps on each VDD pin, 4.7&mu;F bulk on VDD, 100nF + 1&mu;F on VDDA/VREF+, and 4.7&mu;F on VCAP1 for the internal 1.2V regulator</li>
+          <li><strong>DFU boot configuration</strong> &mdash; BOOT0 pin with 10k pull-down to GND and a 2-pin jumper header to 3V3; jumper on + reset enters the ST built-in bootloader for USB firmware flashing without an external programmer</li>
+          <li><strong>Modular interconnects</strong> &mdash; Three 10-pin board-to-board connectors (SFH11-PBPC-D05-ST-BK) placed on three edges for vertical daughter board stacking</li>
+        </ul>
+      </section>
+
+      <section class="project-detail-section">
+        <h2>Board Stack</h2>
+        <p>Complete board stack with all three daughter boards connected via board-to-board connectors. The power board sits at the base, with the motor driver and solenoid actuator boards mounted vertically.</p>
+        <img src="../images/piano-circuit1.jpg" alt="Board stack showing all four PCBs connected" loading="lazy" class="project-detail-img">
+        <img src="../images/piano-circuit2.jpg" alt="Board stack from alternate angle" loading="lazy" class="project-detail-img">
+      </section>
+
+      <section class="project-detail-section">
+        <h2>PCB Layout</h2>
+        <p>2-layer board designed in Altium Designer. Board-to-board connectors placed on three edges for vertical daughter board stacking. USB differential pair routed with ESD protection close to the connector. HSE/LSE crystals placed near MCU oscillator pins with short, symmetric traces.</p>
+        <img src="../images/piano-pcb-layout.png" alt="PCB layout visualization" loading="lazy" class="project-detail-img">
+      </section>
+
+      <section class="project-detail-section">
+        <h2>Assembly &amp; Testing</h2>
+        <p>All SMD components (LQFP64, 0603, 0402 passives) soldered via hot plate reflow. The motherboard was verified independently before integration with the daughter boards.</p>
+        <img src="../images/piano-motherboard.jpg" alt="Motherboard after hot plate reflow soldering" loading="lazy" class="project-detail-img">
+        <img src="../images/piano-pluggedin.jpg" alt="Motherboard during testing with power connected" loading="lazy" class="project-detail-img">
+      </section>
+
+      <section class="project-detail-section">
+        <h2>Final System</h2>
+        <p>The complete system &mdash; motherboard and all three daughter boards &mdash; integrated into a 3D-printed enclosure with an ILI9341 LCD display. The robot successfully played a complete song in the final demonstration.</p>
+        <img src="../images/piano-system.jpg" alt="Final system in 3D-printed enclosure with LCD" loading="lazy" class="project-detail-img">
+      </section>
+
+      <section class="project-detail-section">
+        <h2>Demo &mdash; Tuning Test</h2>
+        <p>Video of the robot during a tuning test, verifying motor positioning and solenoid actuation.</p>
+        <video controls playsinline class="project-detail-img" style="border: none;">
+          <source src="https://github.com/user-attachments/assets/e4c84580-6276-4a45-bc1f-5bcadffd7e85" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </section>
+
+      <section class="project-detail-section">
+        <h2>Schematic</h2>
+        <p>Full schematic designed in Altium Designer. See the <a href="https://github.com/RishiSingh0/piano-robot-motherboard" target="_blank" rel="noopener">GitHub repository</a> for the complete PDF.</p>
+        <img src="../images/piano-schematic.png" alt="Motherboard schematic" loading="lazy" class="project-detail-img">
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 Rishi Singh</p>
+    </div>
+  </footer>
+
+  <script src="../script.js"></script>
+</body>
+</html>
