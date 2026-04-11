@@ -36,8 +36,8 @@
     <div class="container">
       <p class="hero-greeting">Hi, I'm</p>
       <h1 class="hero-name">Rishi Singh</h1>
-      <p class="hero-title">Electrical Engineering Student &amp; Embedded Systems Developer</p>
-      <p class="hero-tagline">Building real-time data acquisition systems, designing PCBs, and writing firmware at UBC.</p>
+      <p class="hero-title">Electrical Engineering Student</p>
+      <p class="hero-tagline">Designing PCBs and building sensor-sync systems for research at UBC.</p>
       <div class="hero-links">
         <a href="Resume_Rishi_Singh.pdf" download class="btn">Download Resume</a>
         <a href="mailto:rishirsingh0@gmail.com" class="btn btn-outline">Email Me</a>
@@ -51,7 +51,7 @@
   <section class="section" id="about">
     <div class="container fade-in">
       <h2 class="section-title">About</h2>
-      <p>I'm an Electrical Engineering student at the University of British Columbia in the Co-op program, with hands-on experience spanning FPGA design, PCB fabrication, firmware development, and avionics maintenance. My background combines academic research in real-time data acquisition with five years of professional experience as an Avionics Systems Technician in the Royal Canadian Air Force. I'm available for co-op starting May 2026.</p>
+      <p>I'm an Electrical Engineering student at the University of British Columbia in the Co-op program, with hands-on experience spanning FPGA design, PCB fabrication, and avionics maintenance. My background combines research lab work on sensor data acquisition with five years of professional experience as an Avionics Systems Technician in the Royal Canadian Air Force. I'm available for co-op starting May 2026.</p>
     </div>
   </section>
 
@@ -69,8 +69,7 @@
           <span class="entry-date">Jan 2026 &ndash; Present</span>
         </div>
         <ul class="entry-list">
-          <li>Built a real-time data acquisition system on a Raspberry Pi 5 synchronizing 6-axis IMU data (up to 1660 Hz via I2C) with 120fps video from a TechNexion AR0234 global shutter camera, using a GStreamer H.264 pipeline with PTS-based frame timestamps</li>
-          <li>Benchmarked and optimized video encoding, reducing frame drop rate from 25.3% to 14.1% at 720p/120fps; authored a migration proposal to NVIDIA Jetson Orin Nano for hardware-accelerated encoding to achieve zero frame drops</li>
+          <li>Built a synchronized video + IMU recording pipeline on a Raspberry Pi 5, capturing 6-axis IMU data (up to 1660 Hz via I2C) aligned with 120fps video from a TechNexion AR0234 global shutter camera via a GStreamer H.264 pipeline with PTS-based frame timestamps</li>
         </ul>
       </div>
 
@@ -132,8 +131,34 @@
                 <span class="tag">I2C</span>
                 <span class="tag">USB</span>
               </div>
-              <p class="project-desc">Designed and fabricated an STM32F446-based motherboard for a piano-playing robot. Integrates SPI (LCD, SD card), I2C (magnetic encoder), and USB (CDC/DFU). Paired with an optocoupler-isolated H-bridge motor driver (12&ndash;16V rail, 8.5A stall) and a 4-channel solenoid actuator board with flyback protection. Debugged and reworked an H-bridge shoot-through failure under PWM on the already-fabricated board, enabling a 20 kHz final demo. All boards assembled via hot plate reflow; the robot successfully played a complete song.</p>
+              <p class="project-desc">Designed and fabricated an STM32F446-based motherboard for a piano-playing robot. Integrates SPI (LCD, SD card), I2C (magnetic encoder), and USB (CDC/DFU) with modular board-to-board interconnects to three daughter boards (motor driver, solenoid actuator, power). All boards assembled via hot plate reflow and integrated in a 3D-printed enclosure &mdash; the robot successfully played a complete song in the final demonstration.</p>
               <a href="projects/piano-robot.html" class="project-link">View Project &rarr;</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- H-Bridge Motor Driver Rework -->
+        <div class="project-card project-card-wide">
+          <div class="project-card-inner">
+            <div class="project-card-thumb">
+              <img src="images/hbridge-rework-board.jpg" alt="Back of the H-bridge PCB with bodge wires and added optocouplers" loading="lazy">
+            </div>
+            <div class="project-card-body">
+              <div class="project-card-header">
+                <h3 class="project-name">H-Bridge Motor Driver &mdash; Shoot-Through Rework</h3>
+                <a href="https://github.com/RishiSingh0/hbridge-motor-driver-circuit" target="_blank" rel="noopener" class="project-gh" aria-label="View on GitHub">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                </a>
+              </div>
+              <div class="project-tags">
+                <span class="tag">Altium Designer</span>
+                <span class="tag">Power Electronics</span>
+                <span class="tag">MOSFET</span>
+                <span class="tag">Debug</span>
+                <span class="tag">Oscilloscope</span>
+              </div>
+              <p class="project-desc">Discrete optocoupler-isolated H-bridge (12&ndash;16V rail, 8.5A stall) driving the piano robot's lateral motor. First PWM integration test at 10 kHz heated the FETs to failure within seconds while bench DC testing had passed cleanly. Probed V<sub>GS</sub> on both FETs with a Tektronix scope, root-caused shoot-through to LTV816 transition time plus a 10k pull-up RC against ~15 nF shared-gate capacitance (~150 &micro;s, longer than the 100 &micro;s PWM period). Executed a post-fabrication bodge on the populated board &mdash; cut 4 PMOS gate traces, added 2 STM32 GPIO enable lines through 2 new optocouplers tapped into back-side through-hole pads, added NMOS pull-downs &mdash; and ran the final demo at <strong>20 kHz PWM</strong> with no thermal issues.</p>
+              <a href="projects/hbridge.html" class="project-link">View Project &rarr;</a>
             </div>
           </div>
         </div>
@@ -165,7 +190,7 @@
             <span class="tag">C</span>
             <span class="tag">nRF52840</span>
           </div>
-          <p class="project-desc">6-layer PCB (50&times;50mm) for a human-powered submarine integrating environmental sensors, SD card logging, and LVDS long-distance communication. Currently undergoing a full redesign incorporating a Battery Management System (BMS) to consolidate the power architecture.</p>
+          <p class="project-desc">6-layer PCB (50&times;50mm) for a human-powered submarine, designed to integrate environmental sensors, SD card logging, and LVDS long-distance communication. First revision is mid-bring-up and currently undergoing a full redesign incorporating a Battery Management System (BMS) to consolidate the power architecture.</p>
         </div>
 
         <!-- ARC4 -->

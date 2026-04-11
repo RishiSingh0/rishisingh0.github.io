@@ -58,7 +58,7 @@
         <h2>System Architecture</h2>
         <ul class="highlight-list">
           <li><strong>Motherboard</strong> &mdash; STM32F446RET6 (ARM Cortex-M4, 180 MHz) with SPI (ILI9341 LCD, SD card), I2C (AS5600 magnetic encoder), USB (CDC virtual COM port and DFU firmware flashing), SWD debug header, and two GPIO expansion headers for probing</li>
-          <li><strong>Motor Driver Board</strong> &mdash; Optocoupler-isolated H-bridge using power MOSFETs (PMOS/NMOS), PWM-controlled via TIM1 channels; 12&ndash;16V rail, 8.5A stall current; final demo at 20 kHz PWM after a post-fabrication shoot-through rework (see section below)</li>
+          <li><strong>Motor Driver Board</strong> &mdash; Optocoupler-isolated H-bridge using power MOSFETs (PMOS/NMOS), PWM-controlled via TIM1 channels; 12&ndash;16V rail, 8.5A stall current; final demo at 20 kHz PWM after a post-fabrication shoot-through rework (<a href="hbridge.html">full writeup &rarr;</a>)</li>
           <li><strong>Solenoid Actuator Board</strong> &mdash; 4-channel solenoid driver with flyback diode protection for the key-pressing mechanisms</li>
           <li><strong>Power Board</strong> &mdash; Regulated power supply with dual source selection: external 3.3V or USB 5V via AMS1117-3.3 LDO, with an SPDT break-before-make switch to prevent simultaneous connection</li>
         </ul>
@@ -95,23 +95,6 @@
       </section>
 
       <section class="project-detail-section">
-        <h2>H-Bridge Shoot-Through Debug &amp; Rework</h2>
-        <p>The first PWM integration test at 10 kHz heated the H-bridge MOSFETs to failure within seconds, while bench DC testing had passed cleanly. Probing V<sub>GS</sub> on both FETs of a half-bridge leg with a Tektronix oscilloscope (low-side gate directly, high-side via a <code>CH1 &minus; CH2</code> math channel referenced to the PMOS source) showed both FETs in their linear region simultaneously on every PWM edge &mdash; classic shoot-through.</p>
-
-        <p>Root cause was the shared-gate complementary drive topology combined with the LTV816 optocoupler's slow transition time (up to 18&nbsp;&micro;s) and the 10k pull-up RC against the ~15&nbsp;nF shared-gate capacitance (SUP70101EL-GE3 C<sub>iss</sub> 7&nbsp;nF plus IRLB3813PBF C<sub>iss</sub> 8.4&nbsp;nF). At 10&nbsp;kHz, the resulting ~150&nbsp;&micro;s RC time constant was longer than the entire 100&nbsp;&micro;s PWM period, so the gate node never settled between edges.</p>
-
-        <img src="../images/piano-hbridge-before.jpg" alt="Scope capture before the rework showing the two VGS traces crossing through the linear region together on each PWM edge" loading="lazy" class="project-detail-img">
-        <p><em>Before: both V<sub>GS</sub> traces cross through the linear region together on each PWM edge. The X-shaped crossover is the shoot-through window where a low-resistance path exists from HV+ to GND.</em></p>
-
-        <p>Because the PCBs were already fabricated and populated, the fix had to be a bodge on the existing board. I cut the four PMOS gate traces, added two new STM32 GPIO enable lines routed through two new single-channel optocouplers (tapped directly into the back-side through-hole pads of the original LTV816s, no extra perfboard), and added pull-down resistors on the NMOS gates. Total signals to the H-bridge grew from 2 to 4 GPIOs &mdash; 2 PWM lines for the NMOS low-side plus 2 enable lines for the PMOS high-side. Firmware guarantees no overlap by de-asserting both PMOS enables before any direction change.</p>
-
-        <img src="../images/piano-hbridge-after.jpg" alt="Scope capture after the rework showing one VGS fully off before the other turns on" loading="lazy" class="project-detail-img">
-        <p><em>After: one V<sub>GS</sub> is fully off before the other turns on, with a clear non-overlap gap between edges. Verified on both rising and falling transitions of the switching cycle.</em></p>
-
-        <p>With the rework in place, PWM returned to 10&nbsp;kHz and then pushed to <strong>20&nbsp;kHz</strong> for the final performance &mdash; no MOSFET heating, no FET failures. Full writeup, scope captures, and Altium v2 files are in the dedicated <a href="https://github.com/RishiSingh0/hbridge-motor-driver-circuit" target="_blank" rel="noopener">hbridge-motor-driver-circuit</a> repo.</p>
-      </section>
-
-      <section class="project-detail-section">
         <h2>Final System</h2>
         <p>The complete system &mdash; motherboard and all three daughter boards &mdash; integrated into a 3D-printed enclosure with an ILI9341 LCD display. The robot successfully played a complete song in the final demonstration.</p>
         <img src="../images/piano-system.jpg" alt="Final system in 3D-printed enclosure with LCD" loading="lazy" class="project-detail-img">
@@ -123,14 +106,14 @@
           <div style="flex: 1 1 320px; min-width: 0;">
             <p><strong>Tuning test</strong> &mdash; verifying motor positioning and solenoid actuation.</p>
             <video controls playsinline class="project-detail-img" style="border: none; width: 100%;">
-              <source src="https://github.com/user-attachments/assets/381959c6-beb1-4cde-a3b7-1b7397a94e4c" type="video/mp4">
+              <source src="../images/piano-tuning-demo.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
           </div>
           <div style="flex: 1 1 320px; min-width: 0;">
             <p><strong>Full performance</strong> &mdash; Fly Me to the Moon at the final demonstration.</p>
             <video controls playsinline class="project-detail-img" style="border: none; width: 100%;">
-              <source src="https://github.com/user-attachments/assets/a43d4908-bae1-4aea-bd88-e41d0c23e8ff" type="video/mp4">
+              <source src="../images/piano-full-performance.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
           </div>
