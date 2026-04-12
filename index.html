@@ -187,7 +187,7 @@
             <span class="tag">DE1-SoC</span>
             <span class="tag">M10K RAM</span>
           </div>
-          <p class="project-desc">Designed a complete ARC4 encryption/decryption core using hierarchical FSMs (Init, KSA, PRGA) with ready-enable handshake protocols, interfacing custom RTL with 209 M10K embedded memory blocks. Scaled to 104 parallel cracking cores with PLL clock boosting and early-termination ASCII validation, exhausting the full 2<sup>24</sup> key space in 1.56s (10.75M keys/sec) on a Cyclone V FPGA &mdash; a 94&times; speedup over single-core baseline.</p>
+          <p class="project-desc">Designed a complete ARC4 encryption/decryption core using hierarchical FSMs (Init, KSA, PRGA) with ready-enable handshake protocols, interfacing custom RTL with ~209 M10K embedded memory blocks. Scaled to 104 parallel cracking cores (52 contiguous key ranges, each a pair of cores splitting even/odd) with early-termination ASCII validation, exhausting the full 2<sup>24</sup> key space in 1.56s (10.75M keys/sec) on a Cyclone V FPGA &mdash; a 94&times; speedup over single-core baseline.</p>
           <a href="projects/arc4.html" class="project-link">View Project &rarr;</a>
         </div>
 
