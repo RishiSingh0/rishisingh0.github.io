@@ -82,8 +82,8 @@
           <span class="entry-date">Sep 2024 &ndash; Present</span>
         </div>
         <ul class="entry-list">
-          <li>Designed and fabricated a 6-layer PCB (50&times;50mm) in Altium Designer integrating nRF52840 SoC, environmental sensors, and multi-protocol communication (SPI, I2C, UART, LVDS)</li>
-          <li>Identified power delivery and routing issues during board bring-up; redesigning with a Battery Management System (BMS) to consolidate the power architecture</li>
+          <li>Designed and fabricated a 6-layer PCB (50&times;50mm) in Altium Designer around an nRF52840 SoC with SPI/I2C/UART/LVDS peripherals; hand-assembled the BGA package with a solder paste stencil</li>
+          <li>Identified power delivery and JTAG routing issues during V1 bring-up (CLK/DIO swap, Error &minus;102); redesigning the V2 motherboard with an on-board nPM1300 battery-management IC and SD card logging, and spinning the hall-effect sensing out onto a separate daughter board linked via a combined power + comms connector</li>
           <li>Trained 10 members in Altium Designer, SMT/reflow soldering, and component sourcing; initiated an electronic steering system project, coordinating research across motor drivers and feedback sensors</li>
         </ul>
       </div>
@@ -163,20 +163,6 @@
           </div>
         </div>
 
-        <!-- IMU & Video Sync -->
-        <div class="project-card">
-          <div class="project-card-header">
-            <h3 class="project-name">Real-Time IMU &amp; Video Sync</h3>
-          </div>
-          <div class="project-tags">
-            <span class="tag">Raspberry Pi 5</span>
-            <span class="tag">Python</span>
-            <span class="tag">GStreamer</span>
-            <span class="tag">I2C</span>
-          </div>
-          <p class="project-desc">Data acquisition framework synchronizing 6-axis IMU data (up to 1660 Hz via I2C) with 120fps global shutter video on a Raspberry Pi 5. Built a GStreamer H.264 encoding pipeline with PTS-based frame timestamps, optimizing bitrate and buffer settings to reduce frame drops from 25.3% to 14.1% at 720p/120fps. Authored migration proposal to NVIDIA Jetson Orin Nano for hardware-accelerated encoding.</p>
-        </div>
-
         <!-- DAQ Module -->
         <div class="project-card">
           <div class="project-card-header">
@@ -190,7 +176,7 @@
             <span class="tag">C</span>
             <span class="tag">nRF52840</span>
           </div>
-          <p class="project-desc">6-layer PCB (50&times;50mm) for a human-powered submarine, designed to integrate environmental sensors, SD card logging, and LVDS long-distance communication. First revision is mid-bring-up and currently undergoing a full redesign incorporating a Battery Management System (BMS) to consolidate the power architecture.</p>
+          <p class="project-desc">6-layer PCB (50&times;50mm) for a human-powered submarine, designed around an nRF52840 SoC with SPI/I2C/UART/LVDS peripherals for sensor integration. V1 hit power delivery and JTAG routing issues during bring-up; planning V2 as a two-board split &mdash; a redesigned motherboard with an on-board nPM1300 battery-management IC and SD card logging, plus a separate hall-effect sensor daughter board with a current loop transmitter linked back via a combined power + comms connector.</p>
         </div>
 
         <!-- ARC4 -->
